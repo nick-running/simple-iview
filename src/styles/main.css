@@ -1,0 +1,76 @@
+body{
+    background-color: #f8f8f9;
+    font-size: 14px;
+    font-family: Helvetica Neue,Helvetica,Arial,Hiragino Sans GB,Hiragino Sans GB W3,WenQuanYi Micro Hei,sans-serif;
+}
+
+.box{
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    transition: all .2s ease-in-out;
+}
+.box:hover{
+    box-shadow: 0 2px 7px rgba(0,0,0,.15);
+    border-color: transparent;
+    position: relative;
+}
+
+::-webkit-scrollbar-track-piece{width:8px;background-color: rgba(60, 60, 60, 0.1);border-radius: 8px;  }
+::-webkit-scrollbar{width:8px;height:6px ;border-radius: 8px; }
+::-webkit-scrollbar-thumb{height:6px;background: rgba(45, 140, 240, 0.71);border-radius: 8px;cursor:pointer;}
+::-webkit-scrollbar-thumb:window-inactive {
+    background: #2d8cf0;
+}
+::-webkit-scrollbar-corner {
+    background: rgba(28, 36, 56, 0.42);
+}
+::-webkit-scrollbar-thumb:hover{background: rgba(45, 140, 240, 0.8);}
+::-webkit-scrollbar-thumb:active{background:#2d8cf0;}
+
+/* 可以设置不同的进入和离开动画 */
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+    transition: all .3s ease;
+}
+.slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+    /* .slide-fade-leave-active for below version 2.1.8 */ {
+    transform: translateX(10px);
+    opacity: 0;
+}
+
+.zoom-in-enter-active {
+    transition: all .2s ease;
+}
+.zoom-in-leave-active {
+    transition: all .4s ease-out;
+}
+.zoom-in-enter, .zoom-in-leave-to
+    /* .zoom-in-leave-active for below version 2.1.8 */ {
+    transform: scale(1.5);
+    opacity: 0;
+}
+
+.mt{
+    margin-top: 20px;
+}
+.mb{
+    margin-bottom: 20px;
+}
+.text-center{
+    text-align: center;
+}
+
+
+.box-shadow{
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+    transition: all .2s ease-in-out;
+}
+.box-shadow:hover{
+    box-shadow: 0 2px 7px rgba(0,0,0,.15);
+    border-color: transparent;
+    position: relative;
+}
