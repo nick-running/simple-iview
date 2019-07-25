@@ -1,6 +1,6 @@
 <template>
     <div class="line-chart">
-        <div ref="chart22" class="chart"></div>
+        <div ref="chart" class="chart"></div>
     </div>
 </template>
 
@@ -62,8 +62,8 @@
     methods: {
       initChart(){
         const _this = this
-        // console.log('this.$refs.chart22 is: ', this.$refs.chart22)
-        _this.chart = echarts.init(this.$refs.chart22)
+        // console.log('this.$refs.chart is: ', this.$refs.chart)
+        _this.chart = echarts.init(this.$refs.chart)
         this.renderChart()
         this.fetchData()
       },
@@ -117,9 +117,9 @@
             data: legendData
           },
           tooltip: {
-            formatter: (params)=>{
-              return _this.tooltipFormatter()(params, 'all', _this.fetchParams.statisticalObject)
-            }
+            // formatter: (params)=>{
+            //   return _this.tooltipFormatter()(params, 'all', _this.fetchParams.statisticalObject)
+            // }
           },
           xAxis: {
             // data: legendData
@@ -128,12 +128,12 @@
           },
           yAxis: {
             type: 'value',
-            axisLabel: {
-              formatter: function (value, index) {
-                let statObj = _this.fetchParams.statisticalObject
-                return bytesToSize(value, 'single', statObj);
-              }
-            }
+            // axisLabel: {
+            //   formatter: function (value, index) {
+            //     let statObj = _this.fetchParams.statisticalObject
+            //     return bytesToSize(value, 'single', statObj);
+            //   }
+            // }
           },
           // color: _this.itemColors,
           // legend: {
