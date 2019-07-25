@@ -35,6 +35,7 @@ export default {
     return series
   },
   timeProcessor(data, {
+    sampling='average',
     name='name',
     type='line',
     symbol='circle',
@@ -54,7 +55,7 @@ export default {
         })
         return rowData
       }
-      let row = {type, symbol, smooth}
+      let row = {sampling, type, symbol, smooth}
       if (d[id]) {
         row.id = d[id]
       }

@@ -19,9 +19,11 @@ Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios
 import sTable from '@/components/table/s-table.vue'
+import sLineChart from '@/components/charts/LineChart.vue'
 import loading from '@/components/loading/loading.vue'
 
 Vue.component('s-table', sTable)
+Vue.component('s-line-chart', sLineChart)
 Vue.component('loading', loading)
 
 import asyncFetchData from '@/mixins/asyncFetchData'

@@ -8,13 +8,14 @@
   import extend from 'extend'
   import { mapState, mapGetters } from 'vuex'
   import {isEqual} from 'lodash'
-  import { NI_BACKEND } from '@/urls/config'
-  import {bytesToSize} from '@/api/utils'
+  // import { NI_BACKEND } from '@/urls/config'
+  // import {bytesToSize} from '@/api/utils'
 
   let echarts = require('echarts');
   require('echarts/lib/chart/bar');
   require('echarts/lib/component/tooltip');
   require('echarts/lib/component/title');
+  import {chartDataProcessor} from '@/api/dataProcessor/index'
   export default {
     name: "line-chart",
     props: {
@@ -34,6 +35,10 @@
       fetchVersion: {
         type: Number,
         default: 0
+      },
+      data: {
+        type: Array,
+        default: ()=>[]
       },
       resizeVersion: {
         type: Number,
@@ -56,7 +61,7 @@
     data() {
       return {
         isFetchFinish: true,
-        chartData: []
+        chartData: this.data
       }
     },
     methods: {
@@ -65,7 +70,7 @@
         // console.log('this.$refs.chart is: ', this.$refs.chart)
         _this.chart = echarts.init(this.$refs.chart)
         this.renderChart()
-        this.fetchData()
+        // this.fetchData()
       },
       fetchData() {
         const _this = this
@@ -73,7 +78,7 @@
         this.isFetchFinish = false
         _this.asyncGet({
           // url: {url: '/api_test_server/'+_this.longUrl},
-          url: {url: _this.longUrl},
+          url: {url: _this.url},
           data: {...this.fetchParams},
           showAutoMsg: true
           // data: {},
@@ -89,22 +94,12 @@
         const _this = this
         // let legendData = []
         let seriesData = [], legendData = []
-        _this.chartData.forEach(n=>{
-          let itemList = []
-          n.data&&n.data.forEach(d=>{
-            // itemList.push([d.ts, d.num])
-            itemList.push({name: d.ts, value: [d.ts, d.num]})
+        seriesData = chartDataProcessor.timeProcessor(_this.data,
+          {
+            tsDataName: 'ts',
+            tsDataValue: 'num'
           })
-          legendData.push({name: n.name})
-          seriesData.push({
-            sampling: 'average',
-            name: n.name,
-            type: 'line',
-            symbol: 'circle',
-            smooth: true,
-            data: itemList
-          })
-        })
+        // console.log('seriesData is: ', JSON.stringify(seriesData))
         _this.chart.setOption(extend(true, {}, _this.lineOption, {
           dataZoom: null,
           title: {
@@ -148,7 +143,7 @@
           //   data: seriesData
           // }]
         }), true);
-        this.resize()
+        // this.resize()
       },
       resize(){
         const _this = this
@@ -158,19 +153,19 @@
       }
     },
     computed: {
-      longUrl(){
-        let baseUri = NI_BACKEND
-        if (NI_BACKEND.slice(NI_BACKEND.length - 1)) {
-          baseUri = NI_BACKEND.substr(0, NI_BACKEND.length-1)
-        }
-        return baseUri+this.url;
-      },
+      // longUrl(){
+      //   let baseUri = NI_BACKEND
+      //   if (NI_BACKEND.slice(NI_BACKEND.length - 1)) {
+      //     baseUri = NI_BACKEND.substr(0, NI_BACKEND.length-1)
+      //   }
+      //   return baseUri+this.url;
+      // },
       ...mapState({
-        doughnutOption: state => state.charts.option.doughnut,
+        // doughnutOption: state => state.charts.option.doughnut,
         lineOption: state => state.charts.option.line,
-        itemColors: state => state.charts.itemColors,
+        // itemColors: state => state.charts.itemColors,
       }),
-      ...mapGetters(['getDateRangeTime', 'barItemStyle', 'tooltipFormatter'])
+      // ...mapGetters(['getDateRangeTime', 'barItemStyle', 'tooltipFormatter'])
     },
     watch: {
       title(data){

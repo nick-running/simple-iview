@@ -6,10 +6,12 @@ import axios from 'axios'
 import CONSTANTS from '@/api/constants'
 Vue.use(Vuex)
 import tables from './modules/tables/index'
+import charts from './modules/charts'
 
 export default new Vuex.Store({
   modules: {
-    tables
+    tables,
+    charts
   },
   state: {
 

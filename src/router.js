@@ -23,7 +23,7 @@ export default new Router({
         {
           path: 'lineChart',
           meta: {
-            title: '表格'
+            title: '折线图'
           },
           component: (resolve) => require(['./views/chart/LineChart.vue'], resolve)
         },

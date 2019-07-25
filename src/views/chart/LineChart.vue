@@ -1,17 +1,24 @@
 <template>
     <div class="line-chart">
+        <h1>折线图</h1>
+        <!--<s-line-chart url="http://127.0.0.1:8033/1ee09cb9db3347a275c7/dataShow/historyBusinessTrend"-->
+                    <!--:resize-version="0"/>-->
+        <s-line-chart style="width: 800px;height: 600px" :resize-version="0" :data="data"/>
     </div>
 </template>
 
 <script>
-    import {chartDataProcessor} from '@/api/dataProcessor/index'
+    // import {chartDataProcessor} from '@/api/dataProcessor/index'
   export default {
-    name: "line-chart",
+    name: "LineChart",
     data() {
-      return {}
+      return {
+        data: []
+      }
     },
     methods: {},
     mounted() {
+      console.log('asdfa')
       // let data = [
       //   {name: '邮件营销', data: [120, 132, 101, 134, 90, 230, 210]},
       //   {name: '联盟广告', data: [220, 182, 191, 234, 290, 330, 310]},
@@ -33,7 +40,7 @@
             },
             {
               "ts": "2019-04-15 00:10:23",
-              "num": "112"
+              "num": "111"
             },
             {
               "ts": "2019-04-15 00:23:23",
@@ -78,14 +85,15 @@
           ]
         }
       ]
-      let seriesData = chartDataProcessor.timeProcessor(data,
-        {
-          // name: name,
-          // dataKey: 'data',
-          tsDataName: 'ts',
-          tsDataValue: 'num'
-        })
-      console.log('seriesData is: ', JSON.stringify(seriesData))
+      this.data = data
+      // let seriesData = chartDataProcessor.timeProcessor(data,
+      //   {
+      //     // name: name,
+      //     // dataKey: 'data',
+      //     tsDataName: 'ts',
+      //     tsDataValue: 'num'
+      //   })
+      // console.log('seriesData is: ', JSON.stringify(seriesData))
     }
   }
 </script>
