@@ -13,7 +13,7 @@ export default {
                   <s-table columns={[
                     {key: 'code', title: '代码', sortable: true},
                     {key: 'name', title: '省份', sortable: true},
-                  ]} data={params.row.pchilds}
+                  ]} data={params.row.pchilds} option={{maxHeight: 450}}
                            hasPage={false} mapId="code"/>
                 </div>
               </Poptip>

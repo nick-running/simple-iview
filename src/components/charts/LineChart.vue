@@ -36,6 +36,9 @@
         type: Number,
         default: 0
       },
+      option: {
+        type: Object
+      },
       data: {
         type: Array,
         default: ()=>[]
@@ -63,6 +66,52 @@
         isFetchFinish: true,
         chartData: this.data
       }
+    },
+    watch: {
+      'option.stack'(v){
+        this.renderChart()
+      },
+      'option.area'(v){
+        this.renderChart()
+      },
+      title(data){
+        this.chart.setOption({
+          title: {
+            text: this.title,
+          }
+        })
+      },
+      showLegend(v){
+        this.chart.setOption({
+          legend: {
+            show: this.showLegend
+          }
+        })
+      },
+      resizeVersion(){
+        // console.log('resizeVersion...')
+        this.chart.resize()
+      },
+      fetchVersion(v){
+        this.fetchData();
+      },
+      // isFetchFinish(v){
+      //   this.fetchData();
+      // },
+      fetchParams(data, oData) {
+        if (!isEqual(data, oData)) {
+          this.fetchData();
+        }
+      }
+    },
+    created(){
+
+    },
+    mounted() {
+      const _this = this
+      setTimeout(function () {
+        _this.initChart()
+      },1)
     },
     methods: {
       initChart(){
@@ -94,8 +143,10 @@
         const _this = this
         // let legendData = []
         let seriesData = [], legendData = []
+
         seriesData = chartDataProcessor.timeProcessor(_this.data,
           {
+            ...this.option,
             tsDataName: 'ts',
             tsDataValue: 'num'
           })
@@ -166,43 +217,6 @@
         // itemColors: state => state.charts.itemColors,
       }),
       // ...mapGetters(['getDateRangeTime', 'barItemStyle', 'tooltipFormatter'])
-    },
-    watch: {
-      title(data){
-        this.chart.setOption({
-          title: {
-            text: this.title,
-          }
-        })
-      },
-      showLegend(v){
-        this.chart.setOption({
-          legend: {
-            show: this.showLegend
-          }
-        })
-      },
-      resizeVersion(){
-        // console.log('resizeVersion...')
-        this.chart.resize()
-      },
-      fetchVersion(v){
-        this.fetchData();
-      },
-      // isFetchFinish(v){
-      //   this.fetchData();
-      // },
-      fetchParams(data, oData) {
-        if (!isEqual(data, oData)) {
-          this.fetchData();
-        }
-      }
-    },
-    mounted() {
-      const _this = this
-      setTimeout(function () {
-        _this.initChart()
-      },1)
     }
   }
 </script>

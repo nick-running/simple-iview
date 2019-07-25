@@ -40,6 +40,8 @@ export default {
     type='line',
     symbol='circle',
     smooth=true,
+    area,
+    stack,
     id='id',
     dataKey='data', tsDataName='ts', tsDataValue='value'}){
     if(!data) return
@@ -56,6 +58,12 @@ export default {
         return rowData
       }
       let row = {sampling, type, symbol, smooth}
+      if(area){
+        row.areaStyle = {}
+      }
+      if(stack){
+        row.stack = stack
+      }
       if (d[id]) {
         row.id = d[id]
       }

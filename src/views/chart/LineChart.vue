@@ -3,7 +3,10 @@
         <h1>折线图</h1>
         <!--<s-line-chart url="http://127.0.0.1:8033/1ee09cb9db3347a275c7/dataShow/historyBusinessTrend"-->
                     <!--:resize-version="0"/>-->
-        <s-line-chart style="width: 800px;height: 600px" :resize-version="0" :data="data"/>
+        <s-line-chart style="width: 800px;height: 600px"
+                      :resize-version="0"
+                      :option="option"
+                      :data="data"/>
     </div>
 </template>
 
@@ -13,6 +16,10 @@
     name: "LineChart",
     data() {
       return {
+        option: {
+          area: true,
+          stack: true
+        },
         data: []
       }
     },

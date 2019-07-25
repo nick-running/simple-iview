@@ -27,16 +27,16 @@
         tableData: []
       }
     },
+    created(){
+      this.tableColumns = this.cities
+    },
+    mounted() {
+    },
     methods: {},
     computed: {
       ...mapState({
         cities: state => state.tables.cities.cities,
       }),
-    },
-    created(){
-      this.tableColumns = this.cities
-    },
-    mounted() {
     }
   }
 </script>

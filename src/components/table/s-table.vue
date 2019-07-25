@@ -5,6 +5,7 @@
                :row-class-name="rowClassName"
                :loading="mLoading"
                :columns="mColumns"
+               :max-height="option.maxHeight"
                :data="mData">
             <loading slot="loading"></loading>
         </Table>
@@ -18,6 +19,10 @@
   export default {
     name: "s-table",
     props: {
+      option: {
+        type: Object,
+        default: ()=>{return {}}
+      },
       hasPage: {
         type: Boolean,
         default: true
