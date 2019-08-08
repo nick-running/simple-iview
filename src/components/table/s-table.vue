@@ -1,6 +1,6 @@
 <template>
     <div class="s-table">
-        <Table @on-row-click="onRowSelect"
+        <Table @on-row-click="onRowClick"
                @on-sort-change="handleSortChange"
                :row-class-name="rowClassName"
                :loading="mLoading"
@@ -89,9 +89,9 @@
       this.mColumns = columns
     },
     methods: {
-      onRowSelect(row){
+      onRowClick(row){
         this.mActiveId = row[this.mapId]
-        this.$emit('on-row-select', row)
+        this.$emit('on-row-click', row)
       },
       rowClassName(row){
         return this.mActiveId===row[this.mapId]?'table-active-row':''
