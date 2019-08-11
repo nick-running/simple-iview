@@ -1,14 +1,24 @@
 <template>
   <div class="home">
+      234234
     <img alt="Vue logo" src="../assets/logo.png">
-      <s-table
-          :url="overviewUrl"
-          :fetchParams="condTypes"
-          :columns="tableColumns"
-          :data="tableData"
-          :hasPage="false"
-          mapId="code">
-      </s-table>
+      testCheck: {{testCheck}}
+      <br>
+      checkList: {{checkList}}
+      <br>
+      <s-checkboxGroup v-model="checkList" :min="1">
+        <s-checkbox label="1">1</s-checkbox>
+        <s-checkbox label="2">2</s-checkbox>
+      </s-checkboxGroup>
+      <!--<s-checkbox v-model="testCheck">2</s-checkbox>-->
+      <!--<s-table-->
+          <!--:url="overviewUrl"-->
+          <!--:fetchParams="condTypes"-->
+          <!--:columns="tableColumns"-->
+          <!--:data="tableData"-->
+          <!--:hasPage="false"-->
+          <!--mapId="code">-->
+      <!--</s-table>-->
   </div>
 </template>
 
@@ -23,6 +33,8 @@ export default {
   },
   data(){
     return {
+      testCheck: true,
+      checkList: [],
       overviewUrl: this.$insightUrls.G_CITY_LIST,
       condTypes: {
         businessName: '',
