@@ -7,10 +7,24 @@
                     <Icon type="ios-apps" />
                     表格
                 </MenuItem>
-                <MenuItem name="line-chart">
-                    <Icon type="ios-apps" />
-                    折线图
-                </MenuItem>
+                <Submenu name="line-chart">
+                    <template slot="title">
+                        <Icon type="md-person"/>
+                        图表
+                    </template>
+                    <MenuItem name="line-chart">
+                        <Icon type="md-person"/>
+                        折线图
+                    </MenuItem>
+                    <MenuItem name="graph-chart">
+                        <Icon type="ios-log-out"/>
+                        关系图
+                    </MenuItem>
+                </Submenu>
+                <!--<MenuItem name="line-chart">-->
+                    <!--<Icon type="ios-apps" />-->
+                    <!--折线图-->
+                <!--</MenuItem>-->
                 <MenuItem name="discover">
                     <Icon type="ios-compass-outline" />
                     发现列表
@@ -50,12 +64,16 @@
     methods: {
       ...mapActions(['logout']),
       handleMenuSelect(name) {
+
         switch (name) {
           case 'table':
             this.$router.push('/table')
             break
           case 'line-chart':
             this.$router.push('/lineChart')
+            break
+          case 'graph-chart':
+            this.$router.push('/graphChart')
             break
           case 'discover':
             this.$router.push('/discover')

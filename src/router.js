@@ -27,6 +27,13 @@ export default new Router({
           },
           component: (resolve) => require(['./views/chart/LineChart.vue'], resolve)
         },
+        {
+          path: 'graphChart',
+          meta: {
+            title: '关系图'
+          },
+          component: (resolve) => require(['./views/chart/GraphChart.vue'], resolve)
+        },
         // {
         //   path: 'discoverDetail/:id/:name',
         //   meta: {

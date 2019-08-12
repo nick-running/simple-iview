@@ -20,12 +20,14 @@ Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 import sTable from '@/components/table/s-table.vue'
 import sLineChart from '@/components/charts/LineChart.vue'
+import sGraphChart from '@/components/charts/GraphChart.vue'
 import loading from '@/components/loading/loading.vue'
 import sCheckbox from '@/components/Checkbox/Checkbox.vue'
 import sCheckboxGroup from '@/components/Checkbox/CheckboxGroup.vue'
 
 Vue.component('s-table', sTable)
 Vue.component('s-line-chart', sLineChart)
+Vue.component('s-graph-chart', sGraphChart)
 Vue.component('loading', loading)
 Vue.component('s-checkbox', sCheckbox)
 Vue.component('s-checkboxGroup', sCheckboxGroup)

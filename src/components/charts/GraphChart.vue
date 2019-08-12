@@ -1,5 +1,5 @@
 <template>
-    <div class="line-chart">
+    <div class="graph-chart">
         <div ref="chart" class="chart"></div>
     </div>
 </template>
@@ -8,8 +8,6 @@
   import extend from 'extend'
   import { mapState, mapGetters } from 'vuex'
   import {isEqual} from 'lodash'
-  // import { NI_BACKEND } from '@/urls/config'
-  // import {bytesToSize} from '@/api/utils'
 
   let echarts = require('echarts');
   require('echarts/lib/chart/bar');
@@ -17,7 +15,7 @@
   require('echarts/lib/component/title');
   import {chartDataProcessor} from '@/api/dataProcessor/index'
   export default {
-    name: "line-chart",
+    name: "graph-chart",
     props: {
       title: {
         type: String,
@@ -67,66 +65,12 @@
         chartData: this.data
       }
     },
-    watch: {
-      'option.stack'(v){
-        this.renderChart()
-      },
-      'option.area'(v){
-        this.renderChart()
-      },
-      title(data){
-        this.chart.setOption({
-          title: {
-            text: this.title,
-          }
-        })
-      },
-      showLegend(v){
-        this.chart.setOption({
-          legend: {
-            show: this.showLegend
-          }
-        })
-      },
-      resizeVersion(){
-        // console.log('resizeVersion...')
-        this.chart.resize()
-      },
-      fetchVersion(v){
-        this.fetchData();
-      },
-      // isFetchFinish(v){
-      //   this.fetchData();
-      // },
-      fetchParams(data, oData) {
-        if (!isEqual(data, oData)) {
-          this.fetchData();
-        }
-      }
-    },
-    created(){
-      chartDataProcessor.graphProcessor([
-        {source: 'a', target: 'b', count: 1},
-        {source: 'b', target: 'a', count: 2},
-        {source: 'c', target: 'b', count: 3},
-        {source: 'c', target: 'b', count: 3},
-        {source: 'c', target: 'b', count: 3},
-        {source: 'c', target: 'a', count: 3},
-        {source: 'a', target: 'c', count: 3},
-        {source: 'a', target: 'd', count: 3},
-      ], {})
-    },
-    mounted() {
-      const _this = this
-      setTimeout(function () {
-        _this.initChart()
-      },1)
-    },
     methods: {
       initChart(){
         const _this = this
         // console.log('this.$refs.chart is: ', this.$refs.chart)
         _this.chart = echarts.init(this.$refs.chart)
+        // console.log('this.chart is: ', this.chart)
         this.renderChart()
         // this.fetchData()
       },
@@ -149,19 +93,20 @@
         })
       },
       renderChart() {
+        if(!this.chart) return
         const _this = this
         // let legendData = []
-        let seriesData = [], legendData = []
+        let seriesData = [], legendData = ['发送0', '接收1']
 
-        seriesData = chartDataProcessor.timeProcessor(_this.data,
+        seriesData = chartDataProcessor.graphProcessor(_this.chartData,
           {
-            ...this.option,
-            tsDataName: 'ts',
-            tsDataValue: 'num'
+            ...this.option
           })
+        // console.log('this.chart is: ', this.chart)
         // console.log('seriesData is: ', JSON.stringify(seriesData))
-        _this.chart.setOption(extend(true, {}, _this.lineOption, {
-          dataZoom: null,
+        // console.log('seriesData is: ', seriesData)
+        _this.chart.setOption({
+          // dataZoom: null,
           title: {
             show: !!this.title,
             text: this.title
@@ -169,27 +114,13 @@
           legend: {
             show: this.showLegend,
             left: 'center',
-            data: legendData
+            data: this.option.categories
           },
-          tooltip: {
-            // formatter: (params)=>{
-            //   return _this.tooltipFormatter()(params, 'all', _this.fetchParams.statisticalObject)
-            // }
-          },
-          xAxis: {
-            // data: legendData
-            type: 'time',
-            boundaryGap: false,
-          },
-          yAxis: {
-            type: 'value',
-            // axisLabel: {
-            //   formatter: function (value, index) {
-            //     let statObj = _this.fetchParams.statisticalObject
-            //     return bytesToSize(value, 'single', statObj);
-            //   }
-            // }
-          },
+          // tooltip: {
+          //   // formatter: (params)=>{
+          //   //   return _this.tooltipFormatter()(params, 'all', _this.fetchParams.statisticalObject)
+          //   // }
+          // },
           // color: _this.itemColors,
           // legend: {
           //   ..._this.legend,
@@ -202,7 +133,7 @@
           //   smooth: true,
           //   data: seriesData
           // }]
-        }), true);
+        }, true);
         // this.resize()
       },
       resize(){
@@ -213,25 +144,33 @@
       }
     },
     computed: {
-      // longUrl(){
-      //   let baseUri = NI_BACKEND
-      //   if (NI_BACKEND.slice(NI_BACKEND.length - 1)) {
-      //     baseUri = NI_BACKEND.substr(0, NI_BACKEND.length-1)
-      //   }
-      //   return baseUri+this.url;
-      // },
       ...mapState({
         // doughnutOption: state => state.charts.option.doughnut,
         lineOption: state => state.charts.option.line,
         // itemColors: state => state.charts.itemColors,
       }),
       // ...mapGetters(['getDateRangeTime', 'barItemStyle', 'tooltipFormatter'])
+    },
+    watch: {
+      url(u){
+        this.fetchData()
+      },
+      data(d){
+        this.chartData = d
+        this.renderChart()
+      }
+    },
+    mounted() {
+      const _this = this
+      setTimeout(function () {
+        _this.initChart()
+      },1)
     }
   }
 </script>
 
 <style scoped lang="scss">
-    .line-chart{
+    .graph-chart{
         flex: auto;
         display: flex;
         .chart{
