@@ -6,9 +6,12 @@
       <br>
       checkList: {{checkList}}
       <br>
-      <s-checkboxGroup v-model="checkList" :min="1">
-        <s-checkbox label="1">1</s-checkbox>
-        <s-checkbox label="2">2</s-checkbox>
+      <s-checkboxGroup v-model="checkList" :min="1" :box="true">
+        <s-checkbox :label="item.key"
+                    v-for="item in showcaseList" :disabled="item.disabled">
+            <h4>{{item.title}}</h4>
+            <p>{{item.key}}</p>
+        </s-checkbox>
       </s-checkboxGroup>
       <!--<s-checkbox v-model="testCheck">2</s-checkbox>-->
       <!--<s-table-->
@@ -34,7 +37,16 @@ export default {
   data(){
     return {
       testCheck: true,
-      checkList: [],
+      checkList: ["reTrans", "reset" ],
+      showcaseList: [
+        {title: '尝试建链', key: 'tryLink'},
+        {title: '建链成功', key: 'linkSucceed', disabled: true},
+        {title: '建链成功率', key: 'linkSucceedRatio'},
+        {title: '重置', key: 'reset'},
+        {title: '连接重置率', key: 'resetRatio'},
+        {title: '重传', key: 'reTrans', disabled: true},
+        {title: '零窗口', key: 'zeroWindow'},
+      ],
       overviewUrl: this.$insightUrls.G_CITY_LIST,
       condTypes: {
         businessName: '',

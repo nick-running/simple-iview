@@ -1,20 +1,20 @@
 <template>
-    <div class="s-checkbox">
-        <label>
-            <input v-if="group"
-                    type="checkbox"
-                    :disabled="disabled"
-                    :value="label"
-                    v-model="model"
-                    @change="change">
-            <input v-else
-                   type="checkbox"
-                   :disabled="disabled"
-                   :checked="currentValue"
-                   @change="change">
+    <label class="s-checkbox" :class="{box: box, active: currentValue, disabled: disabled}">
+        <input v-if="group" v-show="!box"
+                type="checkbox"
+                :disabled="disabled"
+                :value="label"
+                v-model="model"
+                @change="change">
+        <input v-else
+               type="checkbox"
+               :disabled="disabled"
+               :checked="currentValue"
+               @change="change">
+        <div v-if="box">
             <slot></slot>
-        </label>
-    </div>
+        </div>
+    </label>
 </template>
 
 <script>
@@ -44,14 +44,15 @@
       },
       label: {
         type: [String, Number, Boolean]
-      }
+      },
     },
     data() {
       return {
         currentValue: this.value,
         model: [],
         group: false,
-        parent: null
+        parent: null,
+        box: false
       }
     },
     methods: {
@@ -101,5 +102,24 @@
 </script>
 
 <style scoped>
-
+    .box:hover,
+    .box.active,
+    .box.active.disabled{
+        color: #fff;
+        background-color: #655A3F;
+    }
+    .box.disabled{
+        cursor: default;
+        color: inherit;
+        background-color: inherit;
+    }
+    .box{
+        padding: 10px;
+        min-width: 100px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color ease .3s;
+    }
 </style>

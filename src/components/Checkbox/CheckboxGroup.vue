@@ -1,5 +1,5 @@
 <template>
-    <div class="s-checkbox-group">
+    <div class="s-checkbox-group" :class="{box: box}">
         <slot></slot>
     </div>
 </template>
@@ -22,6 +22,10 @@
         default() {
           return []
         }
+      },
+      box: {
+        type: [String, Number, Boolean],
+        default: false
       }
     },
     data() {
@@ -34,13 +38,16 @@
       updateModel(update) {
         this.children = findComponentsDownward(this, 'sCheckbox')
         if (this.children) {
-          const {value} = this
+          const {value, box} = this
           this.children.forEach(child => {
             child.model = value
 
             if (update) {
               child.currentValue = value.indexOf(child.label) >= 0
               child.group = true
+              if (box) {
+                child.box = true
+              }
             }
           })
         }
@@ -72,5 +79,11 @@
 </script>
 
 <style scoped>
-
+    .box{
+        border-radius: 0;
+        display: flex;
+    }
+    .box .box{
+        flex: 1
+    }
 </style>
