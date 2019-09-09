@@ -45,11 +45,6 @@
         activeId: null,
       }
     },
-    created(){
-      this.tableColumns = this.cities
-    },
-    mounted() {
-    },
     methods: {
       handleRowChanged({data, activeId}){
         console.log('...handleRowChanged')
@@ -61,7 +56,12 @@
       ...mapState({
         cities: state => state.tables.cities.cities,
       }),
-    }
+    },
+    mounted() {
+    },
+    created(){
+      this.tableColumns = this.cities
+    },
   }
 </script>
 
