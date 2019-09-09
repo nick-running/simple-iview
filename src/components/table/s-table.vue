@@ -1,15 +1,19 @@
 <template>
     <div class="s-table">
-        <Table @on-row-click="onRowClick"
+        <Table @on-row-click="onRowSelect"
                @on-sort-change="handleSortChange"
                :row-class-name="rowClassName"
                :loading="mLoading"
                :columns="mColumns"
                :max-height="option.maxHeight"
+	       :height="height"
                :data="mData">
             <loading slot="loading"></loading>
         </Table>
-        <Page v-if="hasPage" @on-change="handlePageChange" :page-size="page.pageSize" :total="page.total"
+        <Page v-if="hasPage" @on-change="handlePageChange"
+              :current="page.current"
+              :page-size="page.size"
+              :total="page.total"
               show-elevator size="small" style="margin-top: 20px;text-align: center;"></Page>
     </div>
 </template>
@@ -19,6 +23,9 @@
   export default {
     name: "s-table",
     props: {
+      height: {
+        type: [Number, String],
+      },
       option: {
         type: Object,
         default: ()=>{return {}}
@@ -26,6 +33,10 @@
       hasPage: {
         type: Boolean,
         default: true
+      },
+      sortable: {
+        type: Boolean,
+        default: false
       },
       url: {
         type: Object
@@ -36,7 +47,19 @@
       fetchParams: {
         type: Object,
       },
+      manualFetch: { // 为true后需要自动控制fetchVersion来请求，false fetchParams同样请求
+        type: Boolean,
+        default: false
+      },
       fetchVersion: {
+        type: Number,
+        default: 0
+      },
+      silentFetchVersion: {
+        type: Number,
+        default: 0
+      },
+      fetchPageVersion: {
         type: Number,
         default: 0
       },
@@ -53,116 +76,188 @@
         default: ()=>[]
       },
       activeId: {
-        type: Number,
-        default: -1
+        type: [Number, String],
+        default: null
       }
     },
     data() {
       return {
         mLoading: this.loading,
-        mColumns: [],
+        mColumns: this.columns,
         mData: this.data,
         mActiveId: this.activeId,
         mFetchParams: this.fetchParams,
+        keyFilter: [],
+        header: [],
         sort: {
-          enable: false,
+          // enable: false,
           key: null,
-          order: 'normal'
+          direction: 'normal'
         },
         page: {
+          resetCurrent: false,
           current: 1, // 当前页码
           pageSize: 10, // 每页条数
           total: 0, // 数据总数
         },
       }
     },
-    created(){
-      let columns = []
-      this.columns.forEach(d=>{
-        // let row
-        if (d.active !== false) {
-            // row = d
-            columns.push(d)
-        }
-      })
-      // console.log('rows is: ', JSON.stringify(columns))
-      this.mColumns = columns
-    },
     methods: {
-      onRowClick(row){
+      initTable(){
+        const _this = this
+        this.columns.forEach(item=>{
+          // let header = {title: item.title, key: item.key, active: item.active}
+          // if(item.width){header.width = item.width}
+          // if(item.minWidth){header.minWidth = item.minWidth}
+          // _this.keyFilter.push(header)
+          if (_this.sortable&&item.sortType) {
+            _this.sort.key = item.key
+          }
+          _this.keyFilter.push(item);
+          if(item.active!==false) _this.header.push(item)
+        })
+      },
+      onRowSelect(row){
+        if(!this.mapId) return
         this.mActiveId = row[this.mapId]
-        this.$emit('on-row-click', row)
+        this.$emit('on-row-select', row)
       },
       rowClassName(row){
+        if(!this.mapId) return ''
         return this.mActiveId===row[this.mapId]?'table-active-row':''
       },
       handlePageChange(page){
         this.page.current = page
         this.fetchData()
+        if(document.querySelector('.ivu-table-overflowY')){
+            document.querySelector('.ivu-table-overflowY').scroll(0, 0)
+        }
       },
       handleSortChange({column, key, order}){ // order: asc||desc||normal
-        this.sort.enable = order!=='normal'
+        // console.log('handleSortChange...')
+        // console.log('column is: ', JSON.stringify(column))
+        // console.log('key is: ', JSON.stringify(key))
+        // console.log('order is: ', JSON.stringify(order))
+        // this.sort.enable = order!=='normal'
         this.sort.key = key
-        this.sort.order = order
+        this.sort.direction = order
         this.fetchData()
       },
-      fetchData(){
-        if(!this.url) return
+      fetchData(silentFetch){
         const _this = this
-        _this.mLoading = !this.mLoading;
+        if (!silentFetch) {
+          _this.mLoading = !this.mLoading;
+        }
         let params = assignIn({}, this.mFetchParams)
-        if (this.sort.enable) {
-          // _this.$set(_this.mFetchParams, 'sort', this.sort)
+        if (this.hasPage) {
+          params.page = this.page
+        }
+        if (this.sortable) {
           params.sort = this.sort
         }
+        if (this.sortable) {
+          // _this.$set(_this.mFetchParams, 'sort', this.sort)
+          params.sort = this.sort;
+        }
+        let beforeCollector = this.collector
+        let beforeParams = cloneDeep(params)
         _this.asyncGet({
           url: _this.url,
           data: params,
           showAutoMsg: true
         }).then(data=>{
-          _this.mData = data
-          _this.page.total = data.page.total
-          _this.renderTable()
+          if (beforeCollector===_this.collector&&isEqual(beforeParams, params)) {
+            _this.mLoading = false
+            _this.mData = data.rows
+            _this.page.total = data.page.total
+            _this.renderTable()
+            _this.$emit('on-async-data-loaded', {data: data, activeData: _this.activeData})
+          }
         }).catch(err=>{
           _this.mLoading = false
         });
       },
       renderTable() {
         const _this = this
-        _this.mLoading = false
         let colList = []
-        if(_this.mData.length) {
-          // colList = _this.mData.map((item) => {
-          //   let ret = {}
-          //   _this.tableData.keyFilter.forEach(n=> {
-          //     // if (n.key === 'addr') {
-          //     //   console.log('item is: ', JSON.stringify(item))
-          //     //   ret[n.key] = item.content.join(' ')
-          //     // }else{
-          //     ret[n.key] = item[n.key]
-          //     // }
-          //   })
-          //   return ret
-          // })
-        }
-        // _this.tableData.data = colList
+        // if(_this.mData.length) {
+        //   colList = _this.mData.map((item) => {
+        //     let ret = {}
+        //     _this.keyFilter.forEach(n=> {
+        //       // if (n.key === 'addr') {
+        //       //   console.log('item is: ', JSON.stringify(item))
+        //       //   ret[n.key] = item.content.join(' ')
+        //       // }else{
+        //       ret[n.key] = item[n.key]
+        //       // }
+        //     })
+        //     return ret
+        //   })
+        // }
+        // _this.mData = colList
+
+        _this.mData = _this.mData.map(item=>{
+          let ret = {}
+          _this.keyFilter.forEach(d=>{
+            if (d.processor) {
+              ret[d.key] = d.processor(item[d.key], d.statObj);
+            }else if(d.feature){
+              if (d.feature.key === 'PCT') {
+                ret[d.key] = (total ? (item[d.feature.value] / total * 100).toFixed(2) : 0) + '%'
+              }
+            }else {
+              ret[d.key] = item[d.key]
+            }
+          })
+          return ret
+        })
       },
     },
     computed: {
-
+      activeData(){
+        let {mapId, mActiveId} = this
+        if(!this.mapId) return
+        return find(this.mData, n=>n[mapId]===mActiveId)
+      },
+      ...mapState({
+        // doughnutOption: state => state.charts.option.doughnut,
+        collector: state => state.collectors.collector,
+        // itemColors: state => state.charts.itemColors,
+      }),
     },
     watch: {
+      activeId(id){
+        this.mActiveId = id
+      },
+      'activeData'(data){
+        this.$emit('on-row-change', {data, activeId: this.mActiveId})
+      },
       fetchVersion(v){
+        if (this.page.resetCurrent) {
+          this.page.current = 1
+          this.page.resetCurrent = false
+        }
         this.fetchData();
       },
+      silentFetchVersion(v){
+        this.fetchData(true)
+      },
+      fetchPageVersion(v){
+        this.page.current = 1
+        this.fetchData()
+      },
       fetchParams(data, oData) {
+        this.mFetchParams = data
+        if(this.hasPage) this.page.resetCurrent = true
+        if(this.manualFetch) return
         if (!isEqual(data, oData)) {
           this.fetchData();
         }
       }
     },
     mounted() {
-      if (this.url) {
+      this.initTable()
+      if (this.url&&!this.manualFetch) {
         this.fetchData();
       }
     }
