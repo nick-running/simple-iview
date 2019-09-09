@@ -1,14 +1,27 @@
 <template>
     <div class="Table">
         <h1>表格</h1>
-        <s-table
-                :url="overviewUrl"
-                :fetchParams="condTypes"
-                :columns="tableColumns"
-                :data="tableData"
-                :hasPage="false"
-                mapId="code">
-        </s-table>
+	    <Row>
+		    <i-col span="6">
+			    <div>
+				    <div>activeId: {{activeId}}</div>
+				    <div>activeData: {{activeData}}</div>
+			    </div>
+		    </i-col>
+		    <i-col span="18">
+			    <s-table
+					    :url="overviewUrl"
+					    :fetchParams="condTypes"
+					    :columns="tableColumns"
+					    :data="tableData"
+					    :sortable="true"
+					    :option="tableOption"
+					    :hasPage="false"
+					    @on-row-change="handleRowChanged"
+					    mapId="code">
+			    </s-table>
+		    </i-col>
+	    </Row>
     </div>
 </template>
 
@@ -23,8 +36,13 @@
           businessName: '',
           ip: '',
         },
+        tableOption: {
+          maxHeight: 600
+        },
         tableColumns: [],
-        tableData: []
+        tableData: [],
+        activeData: null,
+        activeId: null,
       }
     },
     created(){
@@ -32,7 +50,13 @@
     },
     mounted() {
     },
-    methods: {},
+    methods: {
+      handleRowChanged({data, activeId}){
+        console.log('...handleRowChanged')
+        this.activeData = data
+        this.activeId = activeId
+      }
+    },
     computed: {
       ...mapState({
         cities: state => state.tables.cities.cities,

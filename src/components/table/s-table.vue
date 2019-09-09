@@ -19,7 +19,8 @@
 </template>
 
 <script>
-  import {assignIn, isEqual} from 'lodash'
+  import {find, assignIn, isEqual, cloneDeep} from 'lodash'
+  import { mapState } from 'vuex'
   export default {
     name: "s-table",
     props: {
@@ -159,16 +160,16 @@
           // _this.$set(_this.mFetchParams, 'sort', this.sort)
           params.sort = this.sort;
         }
-        let beforeCollector = this.collector
+        // let beforeCollector = this.collector
         let beforeParams = cloneDeep(params)
         _this.asyncGet({
           url: _this.url,
           data: params,
           showAutoMsg: true
         }).then(data=>{
-          if (beforeCollector===_this.collector&&isEqual(beforeParams, params)) {
+          if (isEqual(beforeParams, params)) {
             _this.mLoading = false
-            _this.mData = data.rows
+            _this.mData = data
             _this.page.total = data.page.total
             _this.renderTable()
             _this.$emit('on-async-data-loaded', {data: data, activeData: _this.activeData})
@@ -221,7 +222,7 @@
       },
       ...mapState({
         // doughnutOption: state => state.charts.option.doughnut,
-        collector: state => state.collectors.collector,
+        // collector: state => state.collectors.collector,
         // itemColors: state => state.charts.itemColors,
       }),
     },
