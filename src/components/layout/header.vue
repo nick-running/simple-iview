@@ -21,6 +21,10 @@
                         关系图
                     </MenuItem>
                 </Submenu>
+	            <MenuItem name="management">
+		            <Icon type="ios-apps" />
+		            管理列表
+	            </MenuItem>
                 <!--<MenuItem name="line-chart">-->
                     <!--<Icon type="ios-apps" />-->
                     <!--折线图-->
@@ -74,6 +78,9 @@
             break
           case 'graph-chart':
             this.$router.push('/graphChart')
+            break
+          case 'management':
+            this.$router.push('/management')
             break
           case 'discover':
             this.$router.push('/discover')

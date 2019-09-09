@@ -34,6 +34,13 @@ export default new Router({
           },
           component: (resolve) => require(['./views/chart/GraphChart.vue'], resolve)
         },
+        {
+          path: 'management',
+          meta: {
+            title: '表格'
+          },
+          component: (resolve) => require(['./views/Management.vue'], resolve)
+        },
         // {
         //   path: 'discoverDetail/:id/:name',
         //   meta: {
