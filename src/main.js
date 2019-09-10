@@ -14,7 +14,14 @@ Vue.prototype.$midServerUrls = midServerUrls
 Vue.prototype.$insightUrls = insightUrls
 Vue.prototype.$matrixUrls = matrixUrls
 
-Vue.use(iView);
+Vue.use(iView, {
+  transfer: true,
+  // size: 'large',
+  // select: {
+  //   arrow: 'md-arrow-dropdown',
+  //   arrowSize: 20
+  // }
+});
 Vue.config.productionTip = false
 
 Vue.prototype.$axios = axios

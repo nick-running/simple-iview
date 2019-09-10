@@ -1,7 +1,8 @@
 <template>
 	<div class="management">
 		<div class="mb">
-			<Button @click="drawer.visible = true" type="primary" size="small">新增</Button>
+			<Button @click="drawer.visible = true"
+			        type="primary" size="small">新增</Button>
 		</div>
 		<s-table
 				:url="overviewUrl"
@@ -161,6 +162,13 @@
       ...mapState({
         cities: state => state.tables.cities.cities,
       }),
+    },
+    watch: {
+      'drawer.visible'(v){
+        if(!v){
+          this.$refs.formValidate.resetFields()
+        }
+      }
     },
     mounted() {
       
