@@ -15,6 +15,10 @@ Vue.prototype.$midServerUrls = midServerUrls
 Vue.prototype.$insightUrls = insightUrls
 Vue.prototype.$matrixUrls = matrixUrls
 
+Vue.prototype.$Message.config({
+  top: 50,
+  duration: 3
+});
 Vue.use(iView, {
   transfer: true,
   // size: 'large',
