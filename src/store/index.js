@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import iView from 'iview';
+import iView from 'view-design';
 import axios from 'axios'
 import CONSTANTS from '@/api/constants'
 Vue.use(Vuex)

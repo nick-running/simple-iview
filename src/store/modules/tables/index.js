@@ -4,11 +4,15 @@
 import current_early_warning_list from './early_warning'
 import overview from './overview'
 import cities from './cities'
+import cats from './cats'
+import dogs from './dogs'
 export default {
   state: {
     current_early_warning_list,
     overview,
     cities,
+    cats,
+    dogs,
     user_list: [ // 用户管理user
       {key: '_id', title: '_id', active: false},
       {key: 'username', title: '用户名'},

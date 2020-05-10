@@ -4,8 +4,8 @@ import router from './router'
 import store from './store/index'
 
 import axios from 'axios'
-import iView from 'iview'
-import 'iview/dist/styles/iview.css'
+import ViewUI from 'view-design'
+// import 'view-design/dist/styles/iview.css'
 import './my-theme/index.less';
 import './styles/main.css';
 import './styles/over-iview.css';
@@ -15,17 +15,17 @@ Vue.prototype.$midServerUrls = midServerUrls
 Vue.prototype.$insightUrls = insightUrls
 Vue.prototype.$matrixUrls = matrixUrls
 
-Vue.prototype.$Message.config({
-  top: 50,
-  duration: 3
-});
-Vue.use(iView, {
+Vue.use(ViewUI, {
   transfer: true,
   // size: 'large',
   // select: {
   //   arrow: 'md-arrow-dropdown',
   //   arrowSize: 20
   // }
+});
+Vue.prototype.$Message.config({
+  top: 50,
+  duration: 3
 });
 Vue.config.productionTip = false
 

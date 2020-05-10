@@ -31,7 +31,7 @@
     name: "Table",
     data() {
       return {
-        overviewUrl: this.$insightUrls.G_CITY_LIST,
+        overviewUrl: this.$insightUrls.R_HOLIDAY_LIST,
         condTypes: {
           businessName: '',
           ip: '',
@@ -54,13 +54,13 @@
     },
     computed: {
       ...mapState({
-        cities: state => state.tables.cities.cities,
+        header: state => state.tables.dogs.dogs,
       }),
     },
     mounted() {
     },
     created(){
-      this.tableColumns = this.cities
+      this.tableColumns = this.header
     },
   }
 </script>

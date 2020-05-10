@@ -10,6 +10,14 @@ module.exports = {
   devServer: {
     open: true,
     proxy: {
+      '/api_date': {
+        target: 'http://timor.tech',
+        // ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api_date': ''
+        }
+      },
       '/api': {
         target: 'https://www.mxnzp.com',
         // ws: true,
